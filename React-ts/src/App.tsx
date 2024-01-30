@@ -71,37 +71,93 @@
 // export default App;
 
 // !React Hooks - useContext
-import { ReactNode, createContext, useState } from "react";
-import Box2 from "./components/Box2";
+// import { ReactNode, createContext, useState } from "react";
+// import Box2 from "./components/Box2";
 
-type ThemeType = "light" | "dark";
-interface ThemeContextType {
-  theme: ThemeType;
-  toggleTheme: () => void;
-}
+// type ThemeType = "light" | "dark";
+// interface ThemeContextType {
+//   theme: ThemeType;
+//   toggleTheme: () => void;
+// }
 
-export const ThemeContext = createContext<ThemeContextType>({
-  theme: "light",
-  toggleTheme: () => {},
-});
+// export const ThemeContext = createContext<ThemeContextType>({
+//   theme: "light",
+//   toggleTheme: () => {},
+// });
 
-const ThemeProvider = ({children}:{children:ReactNode})=>{
-  const [theme, setTheme] = useState<ThemeType>("light");
-  const toggleTheme = ()=>{
-    setTheme((prev)=> prev === "light" ? 'dark' : 'light')
+// const ThemeProvider = ({children}:{children:ReactNode})=>{
+//   const [theme, setTheme] = useState<ThemeType>("light");
+//   const toggleTheme = ()=>{
+//     setTheme((prev)=> prev === "light" ? 'dark' : 'light')
+//   }
+//   return (
+//   <ThemeContext.Provider value={{theme,toggleTheme}}>
+//     {children}
+//   </ThemeContext.Provider>)
+// }
+
+// const App = () => {
+//   return(
+//     <ThemeProvider>
+//       <Box2/>
+//     </ThemeProvider>)
+// };
+
+// export default App;
+
+// ! Reducer
+import React, { useReducer } from 'react';
+
+type StateType = {
+  count:number
+};
+
+type ActionType =
+  | { type: "Increment"; payload: number }
+  | { type: "Decrement"; payload: number };
+
+const initialState: StateType = {
+  count:0
+};
+
+const reducer = (state: StateType, action: ActionType) : StateType=> {
+  switch (action.type) {
+    case "Increment":
+      return {
+        count:state.count + action.payload
+      };
+    case "Decrement":
+        return {
+            count:state.count - action.payload
+        };
+    default:
+      return state;
   }
-  return (
-  <ThemeContext.Provider value={{theme,toggleTheme}}>
-    {children}
-  </ThemeContext.Provider>)
-}
+};
 
 const App = () => {
-  return(
-    <ThemeProvider>
-      <Box2/>
-    </ThemeProvider>)
+  const [state, dispatch] = useReducer(reducer,initialState)
+  
+  function Increment():void {
+    dispatch({
+        type:"Increment",
+        payload:1
+    })
+  }
+  function Decrement():void {
+    dispatch({
+        type:"Decrement",
+        payload:1
+    })
+  }
+
+  return <div>
+    <h1>Count Change</h1>
+    <p>Count:{state.count}</p>
+    <button onClick={Increment}>+</button>
+    <button onClick={Decrement}>-</button>
+
+  </div>;
 };
 
 export default App;
-
